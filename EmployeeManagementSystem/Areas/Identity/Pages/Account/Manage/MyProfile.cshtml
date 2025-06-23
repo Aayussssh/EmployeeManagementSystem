@@ -1,0 +1,30 @@
+﻿@page
+@model EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage.MyProfileModel
+@{
+    ViewData["Title"] = "My Profile (Admin)";
+}
+
+<h2>My Profile (Admin)</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Email: </label>
+        <span>@Model.AdminUser.Email</span>
+    </div>
+    <div>
+        <label>Profile Picture:</label><br />
+        @if (!string.IsNullOrEmpty(Model.AdminUser.ProfilePicturePath))
+        {
+            <img src="@Model.AdminUser.ProfilePicturePath" alt="Profile Picture" width="100" />
+        }
+        else
+        {
+            <span>No profile picture uploaded.</span>
+        }
+    </div>
+    <div>
+        <label>Upload New Profile Picture:</label>
+        <input type="file" asp-for="ProfileImage" />
+    </div>
+    <button type="submit">Update Profile Picture</button>
+</form>

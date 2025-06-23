@@ -1,0 +1,41 @@
+﻿@page
+@model EmployeeManagementSystem.Pages.Employees.MyDetailsModel
+
+<h3>Employee Details</h3>
+
+<form method="post">
+    <div class="form-group">
+        <label>Name</label>
+        <input asp-for="Employee.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Position</label>
+        <input asp-for="Employee.Position" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input asp-for="Employee.Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Date Of Joining</label>
+        <input asp-for="Employee.DateOfJoining" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Salary</label>
+        <input asp-for="Employee.Salary" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Profile Picture</label><br />
+        @if (!string.IsNullOrEmpty(Model.Employee.ProfilePicturePath))
+        {
+            <img src="@Url.Content(Model.Employee.ProfilePicturePath)" alt="Profile Picture" width="150" height="150" />
+        }
+        else
+        {
+            <p>No profile picture uploaded.</p>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

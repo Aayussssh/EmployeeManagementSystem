@@ -1,0 +1,16 @@
+﻿@page
+@model EmployeeManagementSystem.Pages.Employees.UploadDocumentModel
+@{
+    ViewData["Title"] = "Upload Document";
+}
+
+<h2>Upload Document</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="EmployeeId" />
+    <div class="mb-3">
+        <label>Select Document</label>
+        <input type="file" class="form-control" asp-for="UploadedDocument" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>

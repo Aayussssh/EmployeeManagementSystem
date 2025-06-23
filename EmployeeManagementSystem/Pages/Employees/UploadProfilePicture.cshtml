@@ -1,0 +1,20 @@
+﻿@page
+@model EmployeeManagementSystem.Pages.Employees.UploadProfilePictureModel
+@{
+    ViewData["Title"] = "Upload Profile Picture";
+}
+
+<h2>Upload Profile Picture</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Select Profile Picture</label>
+        <input type="file" asp-for="ProfilePicture" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Upload</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-info mt-2">@Model.Message</div>
+}

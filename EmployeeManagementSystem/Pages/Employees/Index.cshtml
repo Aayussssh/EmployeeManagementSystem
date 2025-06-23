@@ -1,0 +1,46 @@
+﻿@page
+@model EmployeeManagementSystem.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<h1>Employee List</h1>
+
+<a asp-page="./Create" class="btn btn-success mb-3">Add Employee</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Email</th>
+            <th>Date of Joining</th>
+            <th>Salary</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.EmployeeList)
+        {
+            <tr>
+                <td>@employee.Name</td>
+                <td>@employee.Position</td>
+                <td>@employee.Email</td>
+                <td>@employee.DateOfJoining.ToShortDateString()</td>
+                <td>@employee.Salary</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@employee.Id" class="btn btn-primary">Edit</a>
+                    <a asp-page="./Delete" asp-route-id="@employee.Id" class="btn btn-danger">Delete</a>
+                    <a asp-page="./UploadDocument" asp-route-id="@employee.Id" class="btn btn-secondary">Upload Document</a>
+                    <a asp-page="./ViewDocument" asp-route-id="@employee.Id" class="btn btn-info">View Document</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .btn {
+        margin: 2px;
+    }
+</style>
