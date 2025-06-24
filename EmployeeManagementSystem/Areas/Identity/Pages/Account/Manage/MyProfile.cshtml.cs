@@ -3,6 +3,7 @@ using EmployeeManagementSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage
 {
@@ -10,11 +11,13 @@ namespace EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly ApplicationDbContext _context;
 
-        public MyProfileModel(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment)
+        public MyProfileModel(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment, ApplicationDbContext context)
         {
             _userManager = userManager;
             _environment = environment;
+            _context = context;
         }
 
         [BindProperty]
@@ -28,7 +31,7 @@ namespace EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound("Admin user not found.");
+                return NotFound("User not found.");
             }
 
             AdminUser = user;
@@ -40,7 +43,7 @@ namespace EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound("Admin user not found.");
+                return NotFound("User not found.");
             }
 
             if (ProfileImage != null)
@@ -55,10 +58,22 @@ namespace EmployeeManagementSystem.Areas.Identity.Pages.Account.Manage
                     await ProfileImage.CopyToAsync(fileStream);
                 }
 
-                user.ProfilePicturePath = "/uploads/" + uniqueFileName;
+                var dbPath = "/uploads/" + uniqueFileName;
+
+                // Update in AspNetUsers table
+                user.ProfilePicturePath = dbPath;
+                await _userManager.UpdateAsync(user);
+
+                // Update in Employees table if the user is an Employee
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
+                if (employee != null)
+                {
+                    employee.ProfilePicturePath = dbPath;
+                    _context.Employees.Update(employee);
+                    await _context.SaveChangesAsync();
+                }
             }
 
-            await _userManager.UpdateAsync(user);
             return RedirectToPage();
         }
     }

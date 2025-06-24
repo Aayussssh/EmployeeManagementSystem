@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmployeeManagementSystem.Pages.Employees
 {
@@ -18,14 +18,30 @@ namespace EmployeeManagementSystem.Pages.Employees
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null || string.IsNullOrEmpty(employee.DocumentPath))
+            try
             {
-                return NotFound("Document not found.");
-            }
+                var employee = await _context.Employees.FindAsync(id);
 
-            DocumentPath = employee.DocumentPath;
-            return Page();
+                if (employee == null)
+                {
+                    TempData["ErrorMessage"] = "Employee not found.";
+                    return RedirectToPage("/Employees/Index");
+                }
+
+                if (string.IsNullOrEmpty(employee.DocumentPath))
+                {
+                    TempData["ErrorMessage"] = "No document uploaded for this employee.";
+                    return RedirectToPage("/Employees/Index");
+                }
+
+                DocumentPath = employee.DocumentPath;
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while retrieving the document.";
+                return RedirectToPage("/Employees/Index");
+            }
         }
     }
 }
